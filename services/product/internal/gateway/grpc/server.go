@@ -1,20 +1,20 @@
-package internal
+package grpc
 
 import (
 	"context"
 
 	pb "github.com/hijiri/ec-microservices/gen/go/product"
-	"github.com/hijiri/ec-microservices/services/product-service/internal/repo"
+	"github.com/hijiri/ec-microservices/services/product/internal/repository"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type ProductServer struct {
 	pb.UnimplementedProductServiceServer
-	repo repo.Repository
+	repo repository.Repository
 }
 
-func NewProductServer(r repo.Repository) *ProductServer {
+func NewProductServer(r repository.Repository) *ProductServer {
 	return &ProductServer{repo: r}
 }
 
