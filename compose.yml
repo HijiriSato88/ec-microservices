@@ -3,7 +3,6 @@ services:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: product_db
     ports:
       - "3306:3306"
     healthcheck:
@@ -11,3 +10,46 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  product-service:
+    build:
+      context: .
+      dockerfile: services/product/Dockerfile
+    environment:
+      PORT: "50051"
+      DB_DSN: "root:password@tcp(mysql:3306)/product_db?parseTime=true"
+    ports:
+      - "50051:50051"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  cart-service:
+    build:
+      context: .
+      dockerfile: services/cart/Dockerfile
+    environment:
+      PORT: "50052"
+      DB_DSN: "root:password@tcp(mysql:3306)/cart_db?parseTime=true"
+      PRODUCT_ADDR: "product-service:50051"
+    ports:
+      - "50052:50052"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      product-service:
+        condition: service_started
+
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    environment:
+      PORT: "8080"
+      PRODUCT_ADDR: "product-service:50051"
+      CART_ADDR: "cart-service:50052"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - product-service
+      - cart-service
