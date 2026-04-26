@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package product;
+
+option go_package = "github.com/hijiri/ec-microservices/gen/go/product;product";
+
+service ProductService {
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+}
+
+message Product {
+  int64  id          = 1;
+  string name        = 2;
+  string description = 3;
+  int64  price       = 4; // 円
+}
+
+message GetProductRequest {
+  int64 id = 1;
+}
+
+message GetProductResponse {
+  Product product = 1;
+}
+
+message ListProductsRequest {}
+
+message ListProductsResponse {
+  repeated Product products = 1;
+}
+
+message CreateProductRequest {
+  string name        = 1;
+  string description = 2;
+  int64  price       = 3;
+}
+
+message CreateProductResponse {
+  Product product = 1;
+}
