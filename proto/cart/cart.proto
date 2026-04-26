@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package cart;
+
+option go_package = "github.com/hijiri/ec-microservices/gen/go/cart;cart";
+
+service CartService {
+  rpc GetCart(GetCartRequest) returns (GetCartResponse);
+  rpc AddItem(AddItemRequest) returns (AddItemResponse);
+  rpc RemoveItem(RemoveItemRequest) returns (RemoveItemResponse);
+}
+
+message CartItem {
+  int64  product_id   = 1;
+  string product_name = 2;
+  int64  price        = 3;
+  int32  quantity     = 4;
+}
+
+message Cart {
+  string             user_id = 1;
+  repeated CartItem  items   = 2;
+  int64              total   = 3;
+}
+
+message GetCartRequest {
+  string user_id = 1;
+}
+
+message GetCartResponse {
+  Cart cart = 1;
+}
+
+message AddItemRequest {
+  string user_id    = 1;
+  int64  product_id = 2;
+  int32  quantity   = 3;
+}
+
+message AddItemResponse {
+  Cart cart = 1;
+}
+
+message RemoveItemRequest {
+  string user_id    = 1;
+  int64  product_id = 2;
+}
+
+message RemoveItemResponse {
+  Cart cart = 1;
+}
