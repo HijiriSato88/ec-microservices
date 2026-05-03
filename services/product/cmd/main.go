@@ -11,7 +11,6 @@ import (
 	grpcgateway "github.com/hijiri/ec-microservices/services/product/internal/gateway/grpc"
 	"github.com/hijiri/ec-microservices/services/product/internal/repository/mysql"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -43,7 +42,7 @@ func main() {
 
 	srv := grpc.NewServer()
 	pb.RegisterProductServiceServer(srv, grpcgateway.NewProductServer(r))
-	reflection.Register(srv)
+	// reflection.Register(srv)
 
 	log.Printf("product listening on :%s", port)
 	if err := srv.Serve(lis); err != nil {

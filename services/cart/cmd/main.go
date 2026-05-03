@@ -11,7 +11,6 @@ import (
 	grpcgateway "github.com/hijiri/ec-microservices/services/cart/internal/gateway/grpc"
 	"github.com/hijiri/ec-microservices/services/cart/internal/repository/mysql"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -53,7 +52,7 @@ func main() {
 
 	srv := grpc.NewServer()
 	pb.RegisterCartServiceServer(srv, grpcgateway.NewCartServer(r, productClient))
-	reflection.Register(srv)
+	// reflection.Register(srv)
 
 	log.Printf("cart listening on :%s", port)
 	if err := srv.Serve(lis); err != nil {
