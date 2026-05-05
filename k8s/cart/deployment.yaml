@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      containers:
+        - name: cart
+          image: cart-service:v1
+          ports:
+            - containerPort: 50052
+          env:
+            - name: PORT
+              value: "50052"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+            - name: DB_DSN
+              value: "$(DB_USER):$(DB_PASSWORD)@tcp(mysql:3306)/cart_db?parseTime=true"
+            - name: PRODUCT_ADDR
+              value: "product:50051"
